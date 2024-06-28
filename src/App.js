@@ -15,6 +15,7 @@ class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener("unlockProtocol", this.unlockHandler)
+    this.checkout();
   }
 
   componentWillUnmount() {
@@ -53,17 +54,17 @@ class App extends React.Component {
           <header className="App-header">
           </header>
           <main className="Main">
-              {locked === "locked" && (
-                    <MintButton onClick={this.checkout} />
-              )}
-              {locked === "unlocked" && (
-                  <div>
-                    Unlocked!{" "}
-                    <span aria-label="unlocked" role="img">
-                🗝
-              </span>
-                  </div>
-              )}
+              {/*{locked === "locked" && (*/}
+              {/*      <MintButton onClick={this.checkout} />*/}
+              {/*)}*/}
+              {/*{locked === "unlocked" && (*/}
+              {/*    <div>*/}
+              {/*      You already have a ticket!{" "}*/}
+              {/*      <span aria-label="unlocked" role="img">*/}
+              {/*  🗝*/}
+              {/*</span>*/}
+              {/*    </div>*/}
+              {/*)}*/}
           </main>
         </div>
     )
