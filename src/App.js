@@ -1,7 +1,6 @@
 import React from "react"
 import "./App.css"
 import background from "./images/dao_background.png"
-import MintButton from "./MintButton";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +14,7 @@ class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener("unlockProtocol", this.unlockHandler)
-    this.checkout();
+    this.ensureCheckoutLoaded();
   }
 
   componentWillUnmount() {
@@ -26,10 +25,6 @@ class App extends React.Component {
     window.unlockProtocol && window.unlockProtocol.loadCheckoutModal()
   }
 
-  /**
-   * event handler
-   * @param {*} e
-   */
   unlockHandler(e) {
     this.setState(state => {
       return {
@@ -37,6 +32,24 @@ class App extends React.Component {
         locked: e.detail
       }
     })
+  }
+
+  ensureCheckoutLoaded() {
+    const maxRetries = 5;
+    let attempts = 0;
+
+    const loadModal = () => {
+      if (window.unlockProtocol) {
+        window.unlockProtocol.loadCheckoutModal();
+      } else if (attempts < maxRetries) {
+        attempts += 1;
+        setTimeout(loadModal, 1000);
+      } else {
+        console.error("Failed to load the checkout modal after multiple attempts.");
+      }
+    };
+
+    loadModal();
   }
 
   render() {
@@ -47,27 +60,16 @@ class App extends React.Component {
       backgroundPosition: "center",
       height: "100vh",
       width: "100vw",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
     };
 
     return (
         <div className="App" style={backgroundStyle}>
-          <header className="App-header">
-          </header>
-          <main className="Main">
-              {/*{locked === "locked" && (*/}
-              {/*      <MintButton onClick={this.checkout} />*/}
-              {/*)}*/}
-              {/*{locked === "unlocked" && (*/}
-              {/*    <div>*/}
-              {/*      You already have a ticket!{" "}*/}
-              {/*      <span aria-label="unlocked" role="img">*/}
-              {/*  🗝*/}
-              {/*</span>*/}
-              {/*    </div>*/}
-              {/*)}*/}
-          </main>
+          <header className="App-header"></header>
         </div>
-    )
+    );
   }
 }
 
