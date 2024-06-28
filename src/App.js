@@ -1,5 +1,7 @@
 import React from "react"
 import "./App.css"
+import background from "./images/dao_background.png"
+import MintButton from "./MintButton";
 
 class App extends React.Component {
   constructor(props) {
@@ -7,27 +9,18 @@ class App extends React.Component {
     this.unlockHandler = this.unlockHandler.bind(this)
     this.checkout = this.checkout.bind(this)
     this.state = {
-      locked: "pending" // there are 3 state: pending, locked and unlocked
+      locked: "pending"
     }
   }
 
-  /**
-   * When the component mounts, listen to events from unlockProtocol
-   */
   componentDidMount() {
     window.addEventListener("unlockProtocol", this.unlockHandler)
   }
 
-  /**
-   * Make sure we clean things up before unmounting
-   */
   componentWillUnmount() {
     window.removeEventListener("unlockProtocol", this.unlockHandler)
   }
 
-  /**
-   * Invoked to show the checkout modal provided by Unlock (optional... but convenient!)
-   */
   checkout() {
     window.unlockProtocol && window.unlockProtocol.loadCheckoutModal()
   }
@@ -47,27 +40,32 @@ class App extends React.Component {
 
   render() {
     const { locked } = this.state
+    const backgroundStyle = {
+      backgroundImage: `url(${background})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      height: "100vh",
+      width: "100vw",
+    };
+
     return (
-      <div className="App">
-        <header className="App-header">
-          {locked === "locked" && (
-            <div onClick={this.checkout} style={{ cursor: "pointer" }}>
-              Unlock me!{" "}
-              <span aria-label="locked" role="img">
-                🔒
-              </span>
-            </div>
-          )}
-          {locked === "unlocked" && (
-            <div>
-              Unlocked!{" "}
-              <span aria-label="unlocked" role="img">
+        <div className="App" style={backgroundStyle}>
+          <header className="App-header">
+          </header>
+          <main className="Main">
+              {locked === "locked" && (
+                    <MintButton onClick={this.checkout} />
+              )}
+              {locked === "unlocked" && (
+                  <div>
+                    Unlocked!{" "}
+                    <span aria-label="unlocked" role="img">
                 🗝
               </span>
-            </div>
-          )}
-        </header>
-      </div>
+                  </div>
+              )}
+          </main>
+        </div>
     )
   }
 }
